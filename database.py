@@ -7,7 +7,7 @@ load_dotenv()
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 def create_tables():
-    """Create the necessary tables in PostgreSQL"""
+    """Create tables with DATE instead of TIMESTAMP"""
     commands = (
         """
         CREATE TABLE IF NOT EXISTS users (
@@ -15,7 +15,7 @@ def create_tables():
             username VARCHAR(255),
             first_name VARCHAR(255),
             last_name VARCHAR(255),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at DATE DEFAULT CURRENT_DATE
         )
         """,
         """
@@ -24,10 +24,10 @@ def create_tables():
             user_id BIGINT REFERENCES users(user_id),
             title VARCHAR(255) NOT NULL,
             description TEXT,
-            due_date TIMESTAMP,
+            due_date DATE,
             completed BOOLEAN DEFAULT FALSE,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at DATE DEFAULT CURRENT_DATE,
+            updated_at DATE DEFAULT CURRENT_DATE
         )
         """,
         """
@@ -52,8 +52,8 @@ def create_tables():
             conn.close()
 
 def get_connection():
-    """Get a database connection"""
+    """Get database connection"""
     return psycopg2.connect(DATABASE_URL)
 
-# Initialize database tables when this module is imported
+# Initialize tables on import
 create_tables()
